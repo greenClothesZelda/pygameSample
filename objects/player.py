@@ -8,6 +8,8 @@ class Player(Entity, Moveable):
     def __init__(self, x: float, y: float, width: float, height: float, asset_path: Optional[str] = None) -> None:
         super().__init__(x, y, width, height, color=(0,0,0), asset_path='assets/_Crouch.png')
         self.WALK_SPEED: float = 5.0
+        self.position['width'] = width
+        self.position['height'] = height
 
         if asset_path:
             self.image: pygame.Surface = get_sprite_frame(asset_path, 42, 48, 32, 32)

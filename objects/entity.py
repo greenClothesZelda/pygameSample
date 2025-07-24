@@ -55,3 +55,12 @@ class Entity(Rectangle):
         for property in self.__properties:
             property.execute()
 
+    def __lt__(self, other):
+        return id(self) < id(other)
+
+    def __gt__(self, other):
+        return id(self) > id(other)
+
+    def __eq__(self, other):
+        return id(self) == id(other)
+
