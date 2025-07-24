@@ -1,11 +1,22 @@
-class Moveable:
-    def move(self, current_position: dict[str, float], dx:float, dy:float)->None:
-        """
-        Move the current position by dx and dy.
+from objects.properties.prime_property  import PrimeProperty
 
-        :param current_position: The current position of the object.
-        :param dx: The change in x position.
-        :param dy: The change in y position.
+PERIORITY = 0
+
+class Moveable(PrimeProperty):
+    def __init__(self, position:dict[str:float]) -> None:
         """
-        current_position['x'] += dx
-        current_position['y'] += dy
+        Initialize the Moveable property with a given priority.
+
+        :param priority: The priority of the Moveable property.
+        """
+        super().__init__(PERIORITY)
+        self.position: dict[str: float] = position
+
+    def execute(self) -> None:
+        """
+        Update the position based on the current velocity.
+        """
+        self.position['x'] += self.position['dx']
+        self.position['y'] += self.position['dy']
+        self.position['dx'] = 0
+        self.position['dy'] = 0

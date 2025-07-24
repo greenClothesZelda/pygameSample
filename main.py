@@ -1,8 +1,11 @@
 import pygame
+from objects.entity import Entity
 from objects.player import Player
 from enum import Enum
 import heapq
 import copy
+from objects.properties.moveable import Moveable
+
 
 class DrawOrder(Enum):
     BACKGROUND = 0
@@ -24,10 +27,7 @@ def draw_all(screen , object_list, background_tile):
 
 def update_all(object_list:list):
     for _, obj in object_list:
-        if hasattr(obj, "move"):
-            obj.move()
-        else:
-            print(f"Object {obj} does not have a move method.")
+        obj.execute_properties()
 
 pygame.init()
 WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
@@ -39,6 +39,9 @@ player: Player = Player(
     x=100, y=100, width=50, height=50,
     asset_path='assets/_Crouch.png'
 )
+
+player.add_property(Moveable(player.position))  # Player 객체에 Moveable 속성 추가
+
 
 object_list = []
 background_tile = pygame.image.load('assets/Background_Gray.png').convert()

@@ -23,3 +23,12 @@ class Rectangle(Shape):
             surface.blit(rotated_surface, rect.topleft)
         else:
             pygame.draw.rect(surface, self.color, rect)
+
+    def get_min_x(self) -> float:
+        return self.position['x']
+    def get_max_x(self) -> float:
+        return self.position['x'] + self.width
+    def get_min_y(self) -> float:
+        return self.position['y']
+    def get_max_y(self) -> float:
+        return self.position['y'] + self.height
