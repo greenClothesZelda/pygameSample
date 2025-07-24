@@ -12,6 +12,10 @@ class Fallable(PrimeProperty):
     def execute(self) -> None:
         self.position['dy'] += self.__gravity
 
+    def is_expired(self)  -> bool:
+        return False
+
+
     def get_gravity(self) -> float:
         return self.__gravity
 

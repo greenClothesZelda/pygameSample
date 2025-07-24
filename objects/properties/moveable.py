@@ -2,7 +2,7 @@ from objects.properties.prime_property  import PrimeProperty
 from objects.entity import Entity
 import pygame
 
-PERIORITY = -1
+PERIORITY = -10
 
 class Moveable(PrimeProperty):
     def __init__(self, position:dict[str:float], block_list:list) -> None:
@@ -35,6 +35,9 @@ class Moveable(PrimeProperty):
 
         self.position['dx'] = 0
         self.position['dy'] = 0
+
+    def is_expired(self) -> bool:
+        return False
 
     def move(self, dx: float, dy: float) -> None:
         """

@@ -4,10 +4,12 @@ from objects.player import Player
 from enum import Enum
 import heapq
 import copy
+import logging
 
 from objects.properties.fallable import Fallable
 from objects.properties.moveable import Moveable
 from objects.block import Block
+from objects.properties.jump import Jump
 
 
 class DrawOrder(Enum):
@@ -33,6 +35,7 @@ def update_all(object_list:list):
         obj.execute_properties()
 
 pygame.init()
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 screen: pygame.Surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Entity 표시 예제")
@@ -68,6 +71,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                player.add_property(Jump(player.position))  # Jump 속성 추가
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:

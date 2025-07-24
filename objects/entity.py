@@ -1,8 +1,10 @@
 import pygame
+import logging
 from typing import Optional
 
 from objects.prime.rectangle import Rectangle
 from env import isDebug
+from objects.properties.jump import Jump
 from objects.properties.prime_property import PrimeProperty
 
 
@@ -36,13 +38,17 @@ class Entity(Rectangle):
             # 빨간색 테두리 그리기
             pygame.draw.rect(surface, (255, 0, 0), (int(self.position['x']), int(self.position['y']), int(self.width), int(self.height)), 2)
 
-
     def add_property(self, property) -> None:
         if not isinstance(property, PrimeProperty):
             raise TypeError(f"Expected a PrimeProperty, got {type(property)}")
         if property in self.__properties:
             raise ValueError(f"Property {property} already exists in {self}")
-        self.__properties.append(property)
+        # 삽입 위치 탐색
+        idx = 0
+        while idx < len(self.__properties) and self.__properties[idx].get_periority() <= property.get_periority():
+            idx += 1
+        self.__properties.insert(idx, property)
+        logging.debug(f"Added property {property} to {self}")
 
     def remove_property(self, property) -> None:
         if not isinstance(property, PrimeProperty):
@@ -52,8 +58,29 @@ class Entity(Rectangle):
         self.__properties.remove(property)
 
     def execute_properties(self) -> None:
-        for property in self.__properties:
-            property.execute()
+        if not self.__properties:
+            return
+        tmp = []
+        try:
+            while self.__properties:
+                try:
+                    property:PrimeProperty = self.__properties.pop(0)
+                    if property.is_expired():
+                        if(isinstance(property, Jump)):
+                            logging.debug(f"Jump property expired for {self}")
+                        continue  # 만료된 속성은 실행하지 않음
+                    property.execute()
+                    tmp.append(property)
+                except Exception as e:
+                    logging.error(f"Error while executing properties: {e}")
+                    continue
+                    #오류가 난 property는 버림 -> 오류 재발 가능성 있음
+        except Exception as e:
+            logging.error(f"Error while executing properties: {e}")
+        self.__properties.extend(tmp)
+
+
+
 
     def __lt__(self, other):
         return id(self) < id(other)
