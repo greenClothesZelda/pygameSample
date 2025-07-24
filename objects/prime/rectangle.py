@@ -9,7 +9,7 @@ class Rectangle(Shape):
         self.angel: float = angel
 
     def draw(self, surface: pygame.Surface) -> None:
-        rect = pygame.Rect(self.x, self.y, self.width, self.height)
+        rect = pygame.Rect(self.position['x'], self.position['y'], self.width, self.height)
         if self.angel != 0:
             # Create a new surface with the same size as the rectangle
             rotated_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)

@@ -24,9 +24,9 @@ class Entity(Rectangle):
         if not self.is_active or not self.is_display:
             return
         if self.image:
-            surface.blit(self.image, (int(self.x), int(self.y)))
+            surface.blit(self.image, (int(self.position['x']), int(self.position['y'])))
         else:
             super().draw(surface)
         if isDebug:
             # 빨간색 테두리 그리기
-            pygame.draw.rect(surface, (255, 0, 0), (int(self.x), int(self.y), int(self.width), int(self.height)), 2)
+            pygame.draw.rect(surface, (255, 0, 0), (int(self.position['x']), int(self.position['y']), int(self.width), int(self.height)), 2)

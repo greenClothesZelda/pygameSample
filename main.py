@@ -1,5 +1,33 @@
 import pygame
 from objects.player import Player
+from enum import Enum
+import heapq
+import copy
+
+class DrawOrder(Enum):
+    BACKGROUND = 0
+    ENTITY = 1
+    FOREGROUND = 2
+
+def draw_all(screen , object_list, background_tile):
+    tile_width, tile_height = background_tile.get_size()
+    # 배경 타일 반복 출력
+    for y in range(0, screen.get_height(), tile_height):
+        for x in range(0, screen.get_width(), tile_width):
+            screen.blit(background_tile, (x, y))
+    # 얕은 복사로 임시 큐 생성
+    temp_list = object_list[:]
+    while temp_list:
+        priority, obj = heapq.heappop(temp_list)
+        if hasattr(obj, "draw"):
+            obj.draw(screen)
+
+def update_all(object_list:list):
+    for _, obj in object_list:
+        if hasattr(obj, "move"):
+            obj.move()
+        else:
+            print(f"Object {obj} does not have a move method.")
 
 pygame.init()
 WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
@@ -9,8 +37,13 @@ pygame.display.set_caption("Entity 표시 예제")
 # 엔티티 생성 (asset_path를 None으로 하면 사각형, 이미지 경로를 넣으면 이미지)
 player: Player = Player(
     x=100, y=100, width=50, height=50,
-    asset_path='assets/_Crouch.png'  # 예: 'assets/character.png'
+    asset_path='assets/_Crouch.png'
 )
+
+object_list = []
+background_tile = pygame.image.load('assets/Background_Gray.png').convert()
+heapq.heappush(object_list, (DrawOrder.ENTITY.value, player))  # 배경 레이어에 추가
+
 
 clock: pygame.time.Clock = pygame.time.Clock()
 running: bool = True
@@ -19,9 +52,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((255, 255, 255))
-    player.draw(screen)
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        player.walk_left()
+    if keys[pygame.K_RIGHT]:
+        player.walk_right()
+
+
+    # 객체 업데이트
+    update_all(object_list)
+    draw_all(screen, object_list, background_tile)
     pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
+
+
