@@ -2,7 +2,7 @@ from objects.properties.prime_property  import PrimeProperty
 from objects.entity import Entity
 import pygame
 
-PERIORITY = 0
+PERIORITY = -1
 
 class Moveable(PrimeProperty):
     def __init__(self, position:dict[str:float], block_list:list) -> None:

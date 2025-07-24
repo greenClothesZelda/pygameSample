@@ -1,6 +1,6 @@
 from objects.properties.prime_property import PrimeProperty
 
-GRAVITY: float = 3
+GRAVITY: float = 5
 PERIORITY: int = 0  # Fallable의 우선순위
 
 class Fallable(PrimeProperty):

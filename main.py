@@ -4,6 +4,8 @@ from objects.player import Player
 from enum import Enum
 import heapq
 import copy
+
+from objects.properties.fallable import Fallable
 from objects.properties.moveable import Moveable
 from objects.block import Block
 
@@ -37,8 +39,10 @@ pygame.display.set_caption("Entity 표시 예제")
 
 # 블록 리스트 생성
 block_list = []
-block = Block(x=300, y=100, width=50, height=50)
-heapq.heappush(block_list, (DrawOrder.ENTITY.value, block))
+block_width, block_height = 50, 50
+for x in range(0, WINDOW_WIDTH, block_width):
+    block = Block(x=x, y=WINDOW_HEIGHT - block_height, width=block_width, height=block_height)
+    heapq.heappush(block_list, (DrawOrder.ENTITY.value, block))
 
 # 엔티티 생성 (asset_path를 None으로 하면 사각형, 이미지 경로를 넣으면 이미지)
 player: Player = Player(
@@ -47,6 +51,7 @@ player: Player = Player(
 )
 
 player.add_property(Moveable(player.position, block_list))  # Player 객체에 Moveable 속성 추가
+player.add_property(Fallable(player.position))  # Player 객체에 Fallable 속성 추가
 
 
 object_list = []
