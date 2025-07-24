@@ -1,1 +1,1 @@
-isDebug = True
+isDebug: bool = True

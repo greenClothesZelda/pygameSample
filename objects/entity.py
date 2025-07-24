@@ -1,4 +1,5 @@
 import pygame
+from typing import Optional
 
 from objects.prime.rectangle import Rectangle
 from env import isDebug
@@ -7,20 +8,19 @@ from env import isDebug
 class Entity(Rectangle):
     def __init__(
             self, x: float, y: float, width: float,
-            height: float, color: tuple = (0, 0, 0), angle: float = 0,
-            is_display: bool = True, is_active: bool = True, asset_path: str = None):
+            height: float, color: tuple[int, int, int] = (0, 0, 0), angle: float = 0,
+            is_display: bool = True, is_active: bool = True, asset_path: Optional[str] = None) -> None:
 
         super().__init__(x, y, width, height, color, angle)
-        self.is_active = is_active
-        self.is_display = is_display
-        self.asset_path = asset_path
+        self.is_active: bool = is_active
+        self.is_display: bool = is_display
+        self.asset_path: Optional[str] = asset_path
+        self.image: Optional[pygame.Surface] = None
         if asset_path:
             self.image = pygame.image.load(asset_path)
             self.image = pygame.transform.scale(self.image, (int(width), int(height)))
-        else:
-            self.image = None
 
-    def draw(self, surface):
+    def draw(self, surface: pygame.Surface) -> None:
         if not self.is_active or not self.is_display:
             return
         if self.image:
